@@ -1,4 +1,4 @@
-const fs = require('fs');
+import { readFile} from 'fs';
 
 function calculateModuleFuelRequirement(moduleMass) {
     return Math.floor(moduleMass / 3) - 2;
@@ -10,7 +10,7 @@ function calculateTotalFuelRequirement(moduleMasses) {
     }, 0);
 }
 
-fs.readFile('challenge1-input.txt', 'utf8', (err, contents) => {
+readFile('challenge1-input.txt', 'utf8', (err, contents) => {
     let moduleMasses = contents.toString().split("\n").filter(line => line != '');
     console.log(calculateTotalFuelRequirement(moduleMasses));
 });

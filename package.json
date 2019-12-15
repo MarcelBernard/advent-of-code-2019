@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Advent of code challenges 2019",
   "main": "index.js",
+  "type": "module",
   "dependencies": {},
   "devDependencies": {
     "jest": "^24.9.0"

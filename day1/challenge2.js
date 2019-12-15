@@ -1,4 +1,4 @@
-const fs = require('fs');
+import * as fs from 'fs';
 
 function calculateModuleFuelRequirementRecursive(moduleMass) {
     let addedFuelMass = Math.floor(moduleMass / 3) - 2;
