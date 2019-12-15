@@ -1,24 +1,52 @@
 import { promises as fs } from 'fs';
 
-const INSTRUCTION_SIZE = 4;
-const instructionSet = {
-    add: 1,
-    subtract: 2,
-    done: 99
+const executeAdd = (program, instructionPointer) => {
+
 }
 
-// Advance over the input in steps of 4
-// opcode 1 = add
-// opcode 2 = multiply
-// opcode 99 = halt
+const executeSubtract = (program, instructionPointer) => {
 
-// Read in file in memory
-// Split into array based on commas
-// Pass to function to execute program
-// Check opcode, opcode switch
-// add, call add with next 2 and return value. Store value in position.
-// multiple, call multiply next 2 and return value. Store value in position.
-// 99: halt immediately, print array state.
+}
+
+const executeDone = (program, instructionPointer) => {
+
+}
+
+const DONE_OPCODE = 99;
+const instructionSet = {
+    1: {
+        name: 'add',
+        size: 4,
+        operands: {
+            numA: {
+                offset: 1
+            },
+            numB: {
+                offset: 2
+            },
+            resultLocation: {
+                offset: 3
+            }
+        },
+        execute: (program, instructionPointer) => executeAdd(program, instructionPointer)
+    },
+    2: {
+        name: 'subtract',
+        size: 4,
+        operands: {
+            numA: {
+                offset: 1
+            },
+            numB: {
+                offset: 2
+            }, 
+            resultLocation: {
+                offset: 3
+            }
+        },
+        execute: (program, instructionPointer) => executeSubtract(program, instructionPointer)
+    }
+}
 
 const readProgramFromInputFile = async (inputFilename) => {
     let fileContent = await fs.readFile(inputFilename, 'utf8');
@@ -29,28 +57,27 @@ const readProgramFromInputFile = async (inputFilename) => {
 
 function executeProgram(program) {
     console.log('Starting program');
-    for(let instructionPointer = 0; instructionPointer < program.length; instructionPointer = instructionPointer + INSTRUCTION_SIZE) {
-        const opcode = program[instructionPointer];
-        console.log(`Executing instruction: ${opcode}`)
+    let instructionPointerIncrement;
 
-        switch(opcode) {
-            case instructionSet.add:
-                break;
-            case instructionSet.subtract:
-                break;
-            case instructionSet.done:
-                console.log('Program complete');
-                return;
-            default:
-                throw `Invalid instruction: ${opcode}.`;
+    for(let instructionPointer = 0; instructionPointer < program.length; instructionPointer = instructionPointer + instructionPointerIncrement) {
+        const opcode = program[instructionPointer];
+        if (opcode === DONE_OPCODE) {
+            console.log('Program complete');
+            return;
         }
+
+        const instruction = instructionSet[opcode];
+
+        if (instruction === undefined) {
+            throw `Invalid instruction: ${opcode}.`;
+        } else {
+            instruction.execute(program);
+        }
+
+        instructionPointerIncrement = instruction.size;
     }
 
     console.log('Program complete');
-}
-
-function storeValue(location, value, program) {
-    program[location] = value;
 }
 
 readProgramFromInputFile('input.txt')
