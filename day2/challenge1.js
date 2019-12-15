@@ -22,4 +22,4 @@ const readProgramFromInputFile = async (inputFilename) => {
 
 readProgramFromInputFile('input.txt')
     .then(program => console.log(program))
-    .catch(err => console.log('Error reading input file: ' + err))
+    .catch(err => console.log('Error reading input file: ' + err));
