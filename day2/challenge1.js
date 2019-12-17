@@ -1,15 +1,33 @@
 import { promises as fs } from 'fs';
 
-const executeAdd = (program, instructionPointer) => {
-
+const storeValue = (value, location, program) => {
+    program[location] = value;
 }
 
-const executeSubtract = (program, instructionPointer) => {
+function executeAdd(program, instructionPointer) {
+    const numAPointer = program[instructionPointer + this.offsets.numAPointer];
+    const numBPointer = program[instructionPointer + this.offsets.numBPointer];
 
+    const numA = program[numAPointer];
+    const numB = program[numBPointer];
+    const resultPointer = program[instructionPointer + this.offsets.resultPointer];
+
+    const result = numA + numB;
+
+    storeValue(result, resultPointer, program);
 }
 
-const executeDone = (program, instructionPointer) => {
+function executeMultiply(program, instructionPointer) {
+    const numAPointer = program[instructionPointer + this.offsets.numAPointer];
+    const numBPointer = program[instructionPointer + this.offsets.numBPointer];
 
+    const numA = program[numAPointer];
+    const numB = program[numBPointer];
+    const resultPointer = program[instructionPointer + this.offsets.resultPointer];
+
+    const result = numA * numB;
+
+    storeValue(result, resultPointer, program);
 }
 
 const DONE_OPCODE = 99;
@@ -17,34 +35,22 @@ const instructionSet = {
     1: {
         name: 'add',
         size: 4,
-        operands: {
-            numA: {
-                offset: 1
-            },
-            numB: {
-                offset: 2
-            },
-            resultLocation: {
-                offset: 3
-            }
+        offsets: {
+            numAPointer: 1,
+            numBPointer: 2,
+            resultPointer: 3
         },
-        execute: (program, instructionPointer) => executeAdd(program, instructionPointer)
+        execute: executeAdd
     },
     2: {
-        name: 'subtract',
+        name: 'multiply',
         size: 4,
-        operands: {
-            numA: {
-                offset: 1
-            },
-            numB: {
-                offset: 2
-            }, 
-            resultLocation: {
-                offset: 3
-            }
+        offsets: {
+            numAPointer: 1,
+            numBPointer: 2,
+            resultPointer: 3
         },
-        execute: (program, instructionPointer) => executeSubtract(program, instructionPointer)
+        execute: executeMultiply
     }
 }
 
@@ -71,7 +77,7 @@ function executeProgram(program) {
         if (instruction === undefined) {
             throw `Invalid instruction: ${opcode}.`;
         } else {
-            instruction.execute(program);
+            instruction.execute(program, instructionPointer);
         }
 
         instructionPointerIncrement = instruction.size;
@@ -85,4 +91,4 @@ readProgramFromInputFile('input.txt')
         executeProgram(program);
         console.log(program);
     })
-    .catch(err => console.log('Error reading input file: ' + err));
+    .catch(err => console.log('Error running program: ' + err));
