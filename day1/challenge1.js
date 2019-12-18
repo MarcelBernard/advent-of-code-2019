@@ -1,4 +1,4 @@
-import { readFile} from 'fs';
+import { promises } from 'fs';
 
 function calculateModuleFuelRequirement(moduleMass) {
     return Math.floor(moduleMass / 3) - 2;
