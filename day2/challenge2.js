@@ -67,7 +67,7 @@ function executeProgram(program) {
     for(let instructionPointer = 0; instructionPointer < program.length; instructionPointer = instructionPointer + instructionPointerIncrement) {
         const opcode = program[instructionPointer];
         if (opcode === DONE_OPCODE) {
-            return;
+            return program[0];
         }
 
         const instruction = instructionSet[opcode];
